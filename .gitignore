@@ -1,0 +1,20 @@
+# Pasta de build
+build/
+
+# Binarios gerados (fallback)
+main
+tests_bin
+tests/tests
+
+# Objetos e artefatos de compilacao
+*.o
+*.obj
+*.out
+*.exe
+
+# Arquivos de debug
+*.dSYM/
+*.gdb
+
+# Sistema
+.DS_Store

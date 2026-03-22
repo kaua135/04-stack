@@ -10,36 +10,38 @@ As operações principais são:
 - `pop` (desempilhar): remove elemento do topo
 - Tratamento de `overflow` (pilha cheia) e `underflow` (pilha vazia)
 
-## Convenções de Código
-
-- Linguagem: **C++17**
-- Nomeação: `snake_case` para funções e variáveis, `PascalCase` para structs
-- Um header por struct em `/include`
-- Sem uso de `std::stack` ou outras estruturas prontas da STL — a pilha deve ser implementada do zero
-- Comentários em **português**
-
 ## Estrutura do Projeto
+
+```
 /
 ├── .vscode/
 │   ├── tasks.json      # Tarefas de build (compilar projeto e testes)
 │   └── launch.json     # Configuração de debug com GDB
+├── build/              # Executáveis gerados (não versionado — ignorado pelo .gitignore)
+│   ├── main            # Executável do programa principal
+│   └── tests           # Executável dos testes
 ├── include/            # Headers (.h) — declarações da estrutura e funções da pilha
 ├── src/                # Implementação (.cpp) — lógica das operações da pilha
 ├── tests/              # Testes automatizados
+├── .gitignore          # Ignora a pasta build/ e outros artefatos gerados
 └── main.cpp            # Ponto de entrada para demonstração manual
+```
 
 ## Compilação e Execução
 
 ### Manual (terminal)
 
 ```bash
+# Criar a pasta de build (se não existir)
+mkdir -p build
+
 # Compilar e executar o programa principal
-g++ main.cpp src/stack.cpp -Iinclude -o main
-./main
+g++ main.cpp src/stack.cpp -Iinclude -o build/main
+./build/main
 
 # Compilar e executar os testes
-g++ tests/tests.cpp src/stack.cpp -Iinclude -o tests_bin
-./tests_bin
+g++ tests/tests.cpp src/stack.cpp -Iinclude -o build/tests
+./build/tests
 ```
 
 ### Via VSCode
@@ -61,6 +63,13 @@ Define duas tarefas de build, ambas com flag `-g` para suporte a debug com GDB.
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "create build dir",
+            "type": "shell",
+            "command": "mkdir",
+            "args": ["-p", "${workspaceFolder}/build"],
+            "problemMatcher": []
+        },
+        {
             "label": "build project",
             "type": "shell",
             "command": "g++",
@@ -70,8 +79,9 @@ Define duas tarefas de build, ambas com flag `-g` para suporte a debug com GDB.
                 "${workspaceFolder}/src/stack.cpp",
                 "-I${workspaceFolder}/include",
                 "-o",
-                "${workspaceFolder}/main"
+                "${workspaceFolder}/build/main"
             ],
+            "dependsOn": ["create build dir"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -89,8 +99,9 @@ Define duas tarefas de build, ambas com flag `-g` para suporte a debug com GDB.
                 "${workspaceFolder}/src/stack.cpp",
                 "-I${workspaceFolder}/include",
                 "-o",
-                "${workspaceFolder}/tests/tests"
+                "${workspaceFolder}/build/tests"
             ],
+            "dependsOn": ["create build dir"],
             "group": {
                 "kind": "build",
                 "isDefault": false
@@ -114,7 +125,7 @@ Configura o GDB para depurar o executável principal. Executa o build automatica
             "name": "Debug project",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main",
+            "program": "${workspaceFolder}/build/main",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -135,7 +146,7 @@ Configura o GDB para depurar o executável principal. Executa o build automatica
             "name": "Debug tests",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/tests/tests",
+            "program": "${workspaceFolder}/build/tests",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -156,10 +167,29 @@ Configura o GDB para depurar o executável principal. Executa o build automatica
 }
 ```
 
-> Sempre rode os testes após qualquer alteração e certifique-se que todos passam antes de concluir.
+## .gitignore
+
+A pasta `build/` não deve ser versionada. O `.gitignore` mínimo do projeto:
+
+```gitignore
+# Executáveis e artefatos de build
+build/
+
+# Arquivos de objeto intermediários
+*.o
+*.out
+```
+
+## Convenções de Código
+
+- Linguagem: **C++17**
+- Nomeação: `snake_case` para funções e variáveis, `PascalCase` para structs/classes
+- Um header por struct/classe em `/include`
+- Sem uso de `std::stack` ou outras estruturas prontas da STL — a pilha deve ser implementada do zero
+- Comentários em **português**
 
 ## Ferramentas
 
 - Compilador: `g++` (GCC/G++)
 - Debugger: `gdb`
-- Editor recomendado: Visual Studio Code
+- Editor recomendado: Visual Studio Code com extensão **C/C++** (ms-vscode.cpptools)
