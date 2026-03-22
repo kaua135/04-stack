@@ -2,7 +2,11 @@
 #define STACK_H
 
 #include <cstddef>
-#include "node.h"
+
+struct Node {
+    int value;
+    Node* next;
+};
 
 // Estrutura principal da pilha
 struct Stack {
