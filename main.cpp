@@ -1,29 +1,33 @@
 #include "stack.h"
 #include <iostream>
+#include <string>
+
+using namespace std;
 
 int main() {
-    Stack stack;
-    init(&stack, 0);
+    Stack<int> stack;
+    stack.init(0);
 
     std::cout << "Empilhando: 5, 10, 15\n";
-    push(&stack, 5);
-    push(&stack, 10);
-    push(&stack, 15);
+    stack.push(5);
+    stack.push(10);
+    stack.push(15);
 
     int value = 0;
-    if (peek(&stack, &value)) {
+    if (stack.peek(&value)) {
         std::cout << "Topo atual: " << value << "\n";
     }
 
     std::cout << "Desempilhando...\n";
-    while (pop(&stack, &value)) {
+    while (stack.pop(&value)) {
         std::cout << "Removeu: " << value << "\n";
     }
 
-    if (!pop(&stack, &value)) {
+    if (!stack.pop(&value)) {
         std::cout << "Underflow: pilha vazia.\n";
     }
 
-    destroy(&stack);
+    stack.destroy();
+
     return 0;
 }

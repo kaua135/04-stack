@@ -8,7 +8,7 @@ Exercício acadêmico de implementação de uma Pilha (LIFO) com alocação din�
 /
 ├── .vscode/         # Tarefas de build e debug (VSCode)
 ├── include/         # Headers (.h)
-├── src/             # Implementacao (.cpp)
+├── src/             # (vazio) implementacao em headers
 ├── tests/           # Testes automatizados
 ├── build/           # Binarios gerados
 └── main.cpp         # Ponto de entrada para demonstração
@@ -26,11 +26,11 @@ Exercício acadêmico de implementação de uma Pilha (LIFO) com alocação din�
 ```bash
 # Compilar e executar o programa principal
 mkdir -p build
-g++ main.cpp src/stack.cpp -Iinclude -o build/main
+g++ main.cpp -Iinclude -o build/main
 ./build/main
 
 # Compilar e executar os testes
-g++ tests/tests.cpp src/stack.cpp -Iinclude -o build/tests
+g++ tests/tests.cpp -Iinclude -o build/tests
 ./build/tests
 ```
 

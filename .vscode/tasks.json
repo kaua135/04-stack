@@ -8,7 +8,6 @@
             "args": [
                 "-g",
                 "${workspaceFolder}/main.cpp",
-                "${workspaceFolder}/src/stack.cpp",
                 "-I${workspaceFolder}/include",
                 "-o",
                 "${workspaceFolder}/build/main"
@@ -27,7 +26,6 @@
             "args": [
                 "-g",
                 "${workspaceFolder}/tests/tests.cpp",
-                "${workspaceFolder}/src/stack.cpp",
                 "-I${workspaceFolder}/include",
                 "-o",
                 "${workspaceFolder}/build/tests"

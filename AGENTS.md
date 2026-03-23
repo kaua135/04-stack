@@ -21,7 +21,7 @@ As operações principais são:
 │   ├── main            # Executável do programa principal
 │   └── tests           # Executável dos testes
 ├── include/            # Headers (.h) — declarações da estrutura e funções da pilha
-├── src/                # Implementação (.cpp) — lógica das operações da pilha
+├── src/                # (vazio) implementacao em headers
 ├── tests/              # Testes automatizados
 ├── .gitignore          # Ignora a pasta build/ e outros artefatos gerados
 └── main.cpp            # Ponto de entrada para demonstração manual
@@ -36,11 +36,11 @@ As operações principais são:
 mkdir -p build
 
 # Compilar e executar o programa principal
-g++ main.cpp src/stack.cpp -Iinclude -o build/main
+g++ main.cpp -Iinclude -o build/main
 ./build/main
 
 # Compilar e executar os testes
-g++ tests/tests.cpp src/stack.cpp -Iinclude -o build/tests
+g++ tests/tests.cpp -Iinclude -o build/tests
 ./build/tests
 ```
 
@@ -76,7 +76,6 @@ Define duas tarefas de build, ambas com flag `-g` para suporte a debug com GDB.
             "args": [
                 "-g",
                 "${workspaceFolder}/main.cpp",
-                "${workspaceFolder}/src/stack.cpp",
                 "-I${workspaceFolder}/include",
                 "-o",
                 "${workspaceFolder}/build/main"
@@ -96,7 +95,6 @@ Define duas tarefas de build, ambas com flag `-g` para suporte a debug com GDB.
             "args": [
                 "-g",
                 "${workspaceFolder}/tests/tests.cpp",
-                "${workspaceFolder}/src/stack.cpp",
                 "-I${workspaceFolder}/include",
                 "-o",
                 "${workspaceFolder}/build/tests"

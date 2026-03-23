@@ -3,77 +3,77 @@
 #include <iostream>
 
 static void test_push_pop_lifo() {
-    Stack stack;
-    init(&stack, 0);
+    Stack<int> stack;
+    stack.init(0);
 
-    assert(empty(&stack));
-    assert(!is_full(&stack));
+    assert(stack.empty());
+    assert(!stack.is_full());
 
-    assert(push(&stack, 10));
-    assert(push(&stack, 20));
-    assert(push(&stack, 30));
+    assert(stack.push(10));
+    assert(stack.push(20));
+    assert(stack.push(30));
 
     int value = 0;
-    assert(peek(&stack, &value));
+    assert(stack.peek(&value));
     assert(value == 30);
 
-    assert(pop(&stack, &value));
+    assert(stack.pop(&value));
     assert(value == 30);
-    assert(pop(&stack, &value));
+    assert(stack.pop(&value));
     assert(value == 20);
-    assert(pop(&stack, &value));
+    assert(stack.pop(&value));
     assert(value == 10);
 
-    assert(empty(&stack));
-    destroy(&stack);
+    assert(stack.empty());
+    stack.destroy();
 }
 
 static void test_underflow() {
-    Stack stack;
-    init(&stack, 0);
+    Stack<int> stack;
+    stack.init(0);
 
     int value = 123;
-    assert(!pop(&stack, &value));
-    assert(!peek(&stack, &value));
+    assert(!stack.pop(&value));
+    assert(!stack.peek(&value));
 
-    destroy(&stack);
+    stack.destroy();
 }
 
 static void test_overflow_com_max() {
-    Stack stack;
-    init(&stack, 2);
+    Stack<int> stack;
+    stack.init(2);
 
-    assert(push(&stack, 1));
-    assert(push(&stack, 2));
-    assert(is_full(&stack));
-    assert(!push(&stack, 3));
+    assert(stack.push(1));
+    assert(stack.push(2));
+    assert(stack.is_full());
+    assert(!stack.push(3));
 
     int value = 0;
-    assert(pop(&stack, &value));
+    assert(stack.pop(&value));
     assert(value == 2);
-    assert(!is_full(&stack));
+    assert(!stack.is_full());
 
-    destroy(&stack);
+    stack.destroy();
 }
 
 static void test_size() {
-    Stack stack;
-    init(&stack, 0);
+    Stack<int> stack;
+    stack.init(0);
 
-    assert(size(&stack) == 0);
+    assert(stack.size() == 0);
 
-    assert(push(&stack, 1));
-    assert(size(&stack) == 1);
-    assert(push(&stack, 2));
-    assert(size(&stack) == 2);
+    assert(stack.push(1));
+    assert(stack.size() == 1);
+    assert(stack.push(2));
+    assert(stack.size() == 2);
 
     int value = 0;
-    assert(pop(&stack, &value));
-    assert(size(&stack) == 1);
-    assert(pop(&stack, &value));
-    assert(size(&stack) == 0);
+    assert(stack.pop(&value));
+    assert(stack.size() == 1);
+    assert(stack.pop(&value));
+    assert(stack.size() == 0);
 
-    destroy(&stack);
+    stack.destroy();
 }
 
 int main() {

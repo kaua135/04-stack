@@ -3,42 +3,93 @@
 
 #include <cstddef>
 
-using namespace std;
-
+template <typename T>
 struct Node {
-    int value;
-    Node* next;
+    T value;
+    Node<T>* next;
 };
 
-// Estrutura principal da pilha
+template <typename T>
 struct Stack {
-    Node* top;
-    size_t size;
+    Node<T>* top;
+    size_t count;
     size_t max_size; // 0 significa sem limite
+
+    // Inicializa a pilha com tamanho maximo (0 = sem limite)
+    void init(size_t max) {
+        top = nullptr;
+        count = 0;
+        max_size = max;
+    }
+
+    // Libera todos os nos alocados
+    void destroy() {
+        Node<T>* current = top;
+        while (current != nullptr) {
+            Node<T>* next = current->next;
+            delete current;
+            current = next;
+        }
+        top = nullptr;
+        count = 0;
+    }
+
+    // Verifica se a pilha esta vazia
+    bool empty() const {
+        return count == 0;
+    }
+
+    // Verifica se a pilha esta cheia
+    bool is_full() const {
+        if (max_size == 0) {
+            return false;
+        }
+        return count >= max_size;
+    }
+
+    // Retorna a quantidade de elementos na pilha
+    size_t size() const {
+        return count;
+    }
+
+    // Insere elemento no topo
+    bool push(T value) {
+        if (is_full()) {
+            return false;
+        }
+
+        Node<T>* node = new Node<T>{value, top};
+        top = node;
+        count += 1;
+        return true;
+    }
+
+    // Remove elemento do topo e salva em out_value
+    bool pop(T* out_value) {
+        if (empty()) {
+            return false;
+        }
+
+        Node<T>* node = top;
+        if (out_value != nullptr) {
+            *out_value = node->value;
+        }
+        top = node->next;
+        delete node;
+        count -= 1;
+        return true;
+    }
+
+    // Retorna o elemento do topo sem remover
+    bool peek(T* out_value) const {
+        if (empty()) {
+            return false;
+        }
+        if (out_value != nullptr) {
+            *out_value = top->value;
+        }
+        return true;
+    }
 };
-
-// Inicializa a pilha
-void init(Stack* stack, size_t max_size);
-
-// Libera todos os nos da pilha
-void destroy(Stack* stack);
-
-// Verifica se a pilha esta vazia
-bool empty(const Stack* stack);
-
-// Verifica se a pilha esta cheia
-bool is_full(const Stack* stack);
-
-// Retorna a quantidade de elementos na pilha
-size_t size(const Stack* stack);
-
-// Insere elemento no topo
-bool push(Stack* stack, int value);
-
-// Remove elemento do topo e salva em out_value
-bool pop(Stack* stack, int* out_value);
-
-// Retorna o elemento do topo sem remover
-bool peek(const Stack* stack, int* out_value);
 
 #endif
