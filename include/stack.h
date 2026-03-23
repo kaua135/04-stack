@@ -60,7 +60,7 @@ struct Stack {
 
         Node<T>* node = new Node<T>{value, top};
         top = node;
-        count += 1;
+        count++;
         return true;
     }
 
@@ -76,7 +76,7 @@ struct Stack {
         }
         top = node->next;
         delete node;
-        count -= 1;
+        count--;
         return true;
     }
 
