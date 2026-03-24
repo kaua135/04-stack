@@ -14,46 +14,48 @@ bool valida_expressao(string expressao) {
         switch (simbolo) {
             case '(':
             case '[':
-                // Empilha apenas os simbolos de abertura
+            case '{':
                 if (!pilha.push(simbolo)) {
                     pilha.destroy();
                     return false;
-                } // overflow
+                }
                 break;
+
             case ')': {
                 char topo;
-                if (pilha.empty()) {
+                if (!pilha.peek(&topo) || topo != '(') {
                     pilha.destroy();
                     return false;
                 }
-
-                if (!pilha.pop(&topo) || topo != '(') {
-                    pilha.destroy();
-                    return false;
-                }
+                pilha.pop(nullptr);
                 break;
             }
             case ']': {
                 char topo;
-                if (pilha.empty()) {
+                if (!pilha.peek(&topo) || topo != '[') {
                     pilha.destroy();
                     return false;
                 }
-                if (!pilha.pop(&topo) || topo != '[') {
+                pilha.pop(nullptr);
+                break;
+            }
+            case '}': {
+                char topo;
+                if (!pilha.peek(&topo) || topo != '{') {
                     pilha.destroy();
                     return false;
                 }
+                pilha.pop(nullptr);
                 break;
             }
             default:
-                // Ignora outros caracteres
                 break;
         }
     }
 
-    bool ok = pilha.empty();
+    bool resultado = pilha.empty();
     pilha.destroy();
-    return ok;
+    return resultado;
 }
 
 bool detecta_palindromo(string original) {
