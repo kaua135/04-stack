@@ -21,6 +21,12 @@ Exercício acadêmico de implementação de uma Pilha (LIFO) com alocação din�
 
 ## Compilacao e Execucao
 
+em caso de erro qe no final do codigo esta dando -1 faça da seguinte forma:
+abra um novo terminal
+depois coloque esse comando: g++ main.cpp -o programa
+de enter e logo em seguida esse comando .\programa.exe
+o codigo ira rodar normalmente como deveria.
+
 ### Manual (terminal)
 
 ```bash
