@@ -4,74 +4,40 @@
 
 using namespace std;
 
-bool valida_expressao(string expressao){
+bool valida_palindromo(string palavra) {
     Stack<char> stack;
     stack.init(0);
 
-    for(char c : expressao){
+    for (int i = 0; i < palavra.length(); i++) {
+        stack.push(palavra[i]);
+    }
 
-        if(c == '(' || c == '[' || c == '{'){
-            stack.push(c);
-        }
-        else if(c == ')' || c == ']' || c == '}'){
-            char topo;
+    for (int i = 0; i < palavra.length(); i++) {
+        char letra;
 
-            if(!stack.pop(&topo)){
-                stack.destroy();
-                return false;
-            }
+        stack.pop(&letra);
 
-            if( (c == ')' && topo != '(') ||
-                (c == ']' && topo != '[') ||
-                (c == '}' && topo != '{') ){
-                stack.destroy();
-                return false;
-            }
+        if (palavra[i] != letra) {
+            stack.destroy();
+            return false;
         }
     }
 
-    char resto;
-    bool vazio = !stack.pop(&resto);
-
     stack.destroy();
-    return vazio;
+    return true;
 }
 
 int main() {
-    string expressao;
+    string palavra;
 
-    cout << "Digite uma expressao: ";
-    getline(cin, expressao);
+    cout << "Digite uma palavra: ";
+    cin >> palavra;
 
-    if(valida_expressao(expressao)){
-        cout << "Expressao VALIDA " << endl;
+    if (valida_palindromo(palavra)) {
+        cout << "E palindromo\n";
     } else {
-        cout << "Expressao INVALIDA " << endl;
+        cout << "Nao e palindromo\n";
     }
-
-    Stack<int> stack;
-    stack.init(0);
-
-    cout << "\nEmpilhando: 5, 10, 15\n";
-    stack.push(5);
-    stack.push(10);
-    stack.push(15);
-
-    int value = 0;
-    if (stack.peek(&value)) {
-        cout << "Topo atual: " << value << "\n";
-    }
-
-    cout << "Desempilhando...\n";
-    while (stack.pop(&value)) {
-        cout << "Removeu: " << value << "\n";
-    }
-
-    if (!stack.pop(&value)) {
-        cout << "Underflow: pilha vazia.\n";
-    }
-
-    stack.destroy();
 
     return 0;
 }
