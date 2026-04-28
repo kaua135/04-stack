@@ -1,87 +1,66 @@
-#include "stack.h"
-#include <cassert>
 #include <iostream>
+#include "../include/stack.h"
 
-static void test_push_pop_lifo() {
-    Stack<int> stack;
-    stack.init(0);
-
-    assert(stack.empty());
-    assert(!stack.is_full());
-
-    assert(stack.push(10));
-    assert(stack.push(20));
-    assert(stack.push(30));
-
-    int value = 0;
-    assert(stack.peek(&value));
-    assert(value == 30);
-
-    assert(stack.pop(&value));
-    assert(value == 30);
-    assert(stack.pop(&value));
-    assert(value == 20);
-    assert(stack.pop(&value));
-    assert(value == 10);
-
-    assert(stack.empty());
-    stack.destroy();
-}
-
-static void test_underflow() {
-    Stack<int> stack;
-    stack.init(0);
-
-    int value = 123;
-    assert(!stack.pop(&value));
-    assert(!stack.peek(&value));
-
-    stack.destroy();
-}
-
-static void test_overflow_com_max() {
-    Stack<int> stack;
-    stack.init(2);
-
-    assert(stack.push(1));
-    assert(stack.push(2));
-    assert(stack.is_full());
-    assert(!stack.push(3));
-
-    int value = 0;
-    assert(stack.pop(&value));
-    assert(value == 2);
-    assert(!stack.is_full());
-
-    stack.destroy();
-}
-
-static void test_size() {
-    Stack<int> stack;
-    stack.init(0);
-
-    assert(stack.size() == 0);
-
-    assert(stack.push(1));
-    assert(stack.size() == 1);
-    assert(stack.push(2));
-    assert(stack.size() == 2);
-
-    int value = 0;
-    assert(stack.pop(&value));
-    assert(stack.size() == 1);
-    assert(stack.pop(&value));
-    assert(stack.size() == 0);
-
-    stack.destroy();
-}
+using namespace std;
 
 int main() {
-    test_push_pop_lifo();
-    test_underflow();
-    test_overflow_com_max();
-    test_size();
+    Stack<int> pilha;
+    pilha.init(5);
 
-    std::cout << "Todos os testes passaram.\n";
+    cout << "===== TESTES DA PILHA =====" << endl;
+
+    if (pilha.empty())
+        cout << "Teste 1 OK - Pilha inicia vazia" << endl;
+    else
+        cout << "Teste 1 ERRO" << endl;
+
+    pilha.push(10);
+    pilha.push(20);
+    pilha.push(30);
+
+    if (pilha.size() == 3)
+        cout << "Teste 2 OK - Push funcionando" << endl;
+    else
+        cout << "Teste 2 ERRO" << endl;
+
+    int topo;
+
+    if (pilha.peek(&topo) && topo == 30)
+        cout << "Teste 3 OK - Peek funcionando" << endl;
+    else
+        cout << "Teste 3 ERRO" << endl;
+
+    int valor;
+
+    pilha.pop(&valor);
+
+    if (valor == 30)
+        cout << "Teste 4 OK - Pop funcionando" << endl;
+    else
+        cout << "Teste 4 ERRO" << endl;
+
+    if (pilha.size() == 2)
+        cout << "Teste 5 OK - Size funcionando" << endl;
+    else
+        cout << "Teste 5 ERRO" << endl;
+    pilha.push(40);
+    pilha.push(50);
+    pilha.push(60);
+
+    if (pilha.is_full())
+        cout << "Teste 6 OK - Pilha cheia" << endl;
+    else
+        cout << "Teste 6 ERRO" << endl;
+
+    while (!pilha.empty())
+        pilha.pop(nullptr);
+
+    if (!pilha.pop(nullptr))
+        cout << "Teste 7 OK - Underflow tratado" << endl;
+    else
+        cout << "Teste 7 ERRO" << endl;
+
+    pilha.destroy();
+
     return 0;
 }

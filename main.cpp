@@ -1,156 +1,164 @@
-#include "include/stack.h"
 #include <iostream>
-#include <string>
+#include "stack.h"
 
 using namespace std;
 
-// ---------- PALINDROMO ----------
-bool valida_palindromo(string palavra) {
-    Stack<char> stack;
-    stack.init(0);
+int movimentos = 0;
 
-    for (int i = 0; i < palavra.length(); i++) {
-        stack.push(palavra[i]);
+// Mostra torre sem perder os dados
+
+void mostrar_torre(Stack<int>& torre)
+{
+    Stack<int> aux;
+    aux.init(0);
+
+    int valor;
+    bool primeiro = true;
+
+    cout << "[";
+
+    while (!torre.empty())
+    {
+        torre.pop(&valor);
+        aux.push(valor);
     }
 
-    for (int i = 0; i < palavra.length(); i++) {
-        char letra;
-        stack.pop(&letra);
+    while (!aux.empty())
+    {
+        aux.pop(&valor);
 
-        if (palavra[i] != letra) {
-            stack.destroy();
-            return false;
-        }
+        if (!primeiro)
+            cout << ", ";
+
+        cout << valor;
+        primeiro = false;
+
+        torre.push(valor);
     }
 
-    stack.destroy();
-    return true;
+    cout << "]";
+    aux.destroy();
 }
 
-// ---------- EXPRESSAO ----------
-bool valida_expressao(string expressao) {
-    Stack<char> stack;
-    stack.init(0);
+// Mostra estado atual
 
-    for (int i = 0; i < expressao.length(); i++) {
-        char c = expressao[i];
+void mostrar_estado(Stack<int>& A, Stack<int>& B, Stack<int>& C)
+{
+    cout << "A: ";
+    mostrar_torre(A);
 
-        if (c == '(' || c == '[' || c == '{') {
-            stack.push(c);
-        }
-        else if (c == ')' || c == ']' || c == '}') {
-            char topo;
+    cout << "   B: ";
+    mostrar_torre(B);
 
-            if (!stack.pop(&topo)) {
-                stack.destroy();
-                return false;
-            }
+    cout << "   C: ";
+    mostrar_torre(C);
 
-            if ((c == ')' && topo != '(') ||
-                (c == ']' && topo != '[') ||
-                (c == '}' && topo != '{')) {
-                stack.destroy();
-                return false;
-            }
-        }
-    }
-
-    bool correta = stack.empty();
-
-    stack.destroy();
-    return correta;
+    cout << endl;
 }
 
-// ---------- DECIMAL PARA BINARIO ----------
-void decimal_para_binario(int numero) {
-    Stack<int> stack;
-    stack.init(0);
+// Move disco entre torres
 
-    if (numero == 0) {
-        cout << "Binario: 0" << endl;
+void mover_disco(Stack<int>& origem, Stack<int>& destino,
+                 char nome_origem, char nome_destino,
+                 Stack<int>& A, Stack<int>& B, Stack<int>& C)
+{
+    int disco;
+
+    origem.pop(&disco);
+    destino.push(disco);
+
+    movimentos++;
+
+    cout << "Mover disco "
+         << disco
+         << " de "
+         << nome_origem
+         << " para "
+         << nome_destino
+         << endl;
+
+    mostrar_estado(A, B, C);
+    cout << endl;
+}
+
+// Hanoi recursivo
+
+void hanoi(int n,
+           Stack<int>& origem,
+           Stack<int>& auxiliar,
+           Stack<int>& destino,
+           char nome_origem,
+           char nome_auxiliar,
+           char nome_destino,
+           Stack<int>& A,
+           Stack<int>& B,
+           Stack<int>& C)
+{
+    if (n == 1)
+    {
+        mover_disco(origem, destino,
+                    nome_origem, nome_destino,
+                    A, B, C);
         return;
     }
 
-    while (numero > 0) {
-        stack.push(numero % 2);
-        numero = numero / 2;
+    hanoi(n - 1,
+          origem, destino, auxiliar,
+          nome_origem, nome_destino, nome_auxiliar,
+          A, B, C);
+
+    mover_disco(origem, destino,
+                nome_origem, nome_destino,
+                A, B, C);
+
+    hanoi(n - 1,
+          auxiliar, origem, destino,
+          nome_auxiliar, nome_origem, nome_destino,
+          A, B, C);
+}
+
+// main
+
+int main()
+{
+    Stack<int> A, B, C;
+
+    A.init(0);
+    B.init(0);
+    C.init(0);
+
+    int n;
+
+    cout << "===== TORRE DE HANOI =====" << endl;
+    cout << "Digite o numero de discos (1 a 10): ";
+
+    while (!(cin >> n) || n < 1 || n > 10)
+    {
+        cin.clear();
+        cin.ignore(1000, '\n');
+
+        cout << "Valor invalido. Digite entre 1 e 10: ";
     }
 
-    int bit;
-
-    cout << "Binario: ";
-
-    while (stack.pop(&bit)) {
-        cout << bit;
+    for (int i = n; i >= 1; i--)
+    {
+        A.push(i);
     }
 
     cout << endl;
+    cout << "Estado inicial:" << endl;
+    mostrar_estado(A, B, C);
+    cout << endl;
 
-    stack.destroy();
-}
+    hanoi(n, A, B, C, 'A', 'B', 'C', A, B, C);
 
-int main() {
+    cout << "Total de movimentos realizados: "
+         << movimentos
+         << endl;
 
-    // ---------- PALINDROMO ----------
-    string palavra;
-
-    cout << "Digite uma palavra: ";
-    cin >> palavra;
-
-    if (valida_palindromo(palavra)) {
-        cout << "A palavra e um palindromo" << endl;
-    } else {
-        cout << "A palavra nao e um palindromo" << endl;
-    }
-
-    cin.ignore();
-
-    // ---------- EXPRESSAO ----------
-    string expressao;
-
-    cout << "\nDigite uma expressao matematica: ";
-    getline(cin, expressao);
-
-    if (valida_expressao(expressao)) {
-        cout << "Expressao CORRETA" << endl;
-    } else {
-        cout << "Expressao INCORRETA" << endl;
-    }
-
-    // ---------- DECIMAL PARA BINARIO ----------
-    int numero;
-
-    cout << "\nDigite um numero decimal: ";
-    cin >> numero;
-
-    decimal_para_binario(numero);
-
-    // ---------- MAIN ORIGINAL ----------
-    Stack<int> stack;
-    stack.init(0);
-
-    cout << "\nEmpilhando: 5, 10, 15\n";
-    stack.push(5);
-    stack.push(10);
-    stack.push(15);
-
-    int value = 0;
-
-    if (stack.peek(&value)) {
-        cout << "Topo atual: " << value << "\n";
-    }
-
-    cout << "Desempilhando...\n";
-
-    while (stack.pop(&value)) {
-        cout << "Removeu: " << value << "\n";
-    }
-
-    if (!stack.pop(&value)) {
-        cout << "Underflow: pilha vazia.\n";
-    }
-
-    stack.destroy();
+    A.destroy();
+    B.destroy();
+    C.destroy();
 
     return 0;
 }
